@@ -103,8 +103,14 @@ public class SocketClient {
 		    }
 	    	// process line according to option sent...
 	    	switch (option) {
-	    	case "1":
-	    		System.out.println("1. Display the names of all known users");
+	    	case "1":		// 1.	Display the names of all known users.
+	    		System.out.println("Known users:");
+	    		String[] allUsers = line.split(",");
+	    		int count = 0;
+	    		for (String user: allUsers) {
+	    			count++;
+	    			System.out.println("   " + count + "   " + user);
+	    		}
 	    		break;
 	    	case "2":
 	    		System.out.println("2. Display the names of all currently connected users.");

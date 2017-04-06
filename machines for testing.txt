@@ -1,0 +1,6 @@
+Set of machines for sockets work..
+ 
+net01 thru net45
+ 
+Use these for running...
+run client and server on different machines

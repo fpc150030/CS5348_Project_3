@@ -1,13 +1,13 @@
 import java.util.Date;
 
-public class Node {
-	Node next = null;
-	Node prev = null;
+public class MessageNode {
+	MessageNode next = null;
+	MessageNode prev = null;
 	String user = "";   	// user name
 	Date date	= null;		// date sent
 	String message = "";
 	 
-	public Node(String user, Date date, String message) {
+	public MessageNode(String user, Date date, String message) {
 		this.user = user;
 		this.date = date;
 		this.message = message;

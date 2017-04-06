@@ -9,6 +9,12 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 class ClientWorker implements Runnable 
 {
@@ -41,17 +47,52 @@ class ClientWorker implements Runnable
     	  line = "Hi " + line;
     	  out.println(line);
     	  //  update user cache
+    	  SocketServer.mutex.acquire();
+    	  // if user name exists in hashmap, assume this is repeated login?
+    	  // remove from disconnected list
+    	  if (!SocketServer.users.containsKey(name)) {
+    		  SocketServer.users.put(name, null);
+    	  } else {
+    		  SocketServer.disconnected.remove(name);
+    	  }
+    	  SocketServer.mutex.release();
       } 
       catch (IOException e) {
     	  System.out.println("Read failed");
     	  System.exit(-1);
-      }
+      } catch (InterruptedException e) {
+		  System.out.println("mutex acquire failed");
+		  System.exit(-1);
+	}
 
       while (!line.equals("7") ) {
     	  try {
         	  // Receive text from client
         	  line = in.readLine();
-    	 
+        	  switch (line) {
+        	  case "1":			// return comma delimited string of usernames
+        		  Set<String> userKeys = SocketServer.users.keySet();
+        		  List<String> list=new ArrayList<String>(userKeys);
+        		  Collections.sort(list);
+        		  StringBuilder b = new StringBuilder();
+        		  for (String key: list) {
+        			  b.append(key);
+        			  b.append(","); 
+        		  }
+        		  out.println(b.toString());
+        		  break;
+        	  case "2":			// return comma delimited string of usernames iff not in disconnected
+        		  // access keys (elements of Set) individually so can see if in disconnected
+        		//access via new for-loop
+//        		  for(Object object : setA) {
+//        		      String element = (String) object;
+//        		  }
+        	  case "3":
+        	  case "4":
+        	  case "5":
+        	  case "6":
+        	  case "7":
+        	  }
         	  // Send response back to client
         	  //line = "Hi " + line;
         	  out.println(line);
@@ -62,7 +103,14 @@ class ClientWorker implements Runnable
           }
       }
       System.out.println("Server thread for " + name + " exiting...");
-      
+      try {
+		SocketServer.mutex.acquire();
+	} catch (InterruptedException e1) {
+		System.out.println("unable to acquire mutex");
+	}
+	  // add username to 'disconnected'
+	  SocketServer.disconnected.add(name) ;
+	  SocketServer.mutex.release();
       try {
     	  client.close();
       } 
