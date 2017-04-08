@@ -23,9 +23,6 @@ public class SocketClient {
 			g.	Exit.
 		5)	Interact with the server to support the menu choices.
 		6)	Ask the user for the next choice or exit.
-
-
-
 	 */
 	
 	 Socket socket = null;
@@ -113,7 +110,13 @@ public class SocketClient {
 	    		}
 	    		break;
 	    	case "2":
-	    		System.out.println("2. Display the names of all currently connected users.");
+			    System.out.println("Currently connected users:");
+	    		String[] connectedUsers = line.split(",");
+	    		int count1 = 0;
+	    		for (String user: connectedUsers) {
+	    			count1++;
+	    			System.out.println("   " + count1 + "   " + user);
+	    		}
 	    		break;
 	    	case "3":
 	    		System.out.println("3. Send a text message to a particular user.");

@@ -82,20 +82,32 @@ class ClientWorker implements Runnable
         		  out.println(b.toString());
         		  break;
         	  case "2":			// return comma delimited string of usernames iff not in disconnected
-        		  // access keys (elements of Set) individually so can see if in disconnected
-        		//access via new for-loop
-//        		  for(Object object : setA) {
-//        		      String element = (String) object;
-//        		  }
+				  Set<String> keys = SocketServer.users.keySet();
+				  List<String> all=new ArrayList<String>(keys);
+				  List<String> connected=new ArrayList<String>();
+				  for(String elm: all){
+					  if (!SocketServer.disconnected.contains(elm)) {
+						  connected.add(elm);
+					  }
+				  }
+				   Collections.sort(connected);
+				   StringBuilder c = new StringBuilder();
+				   for(String key: connected) {
+					   c.append(key);
+					   c.append(",");
+				   }
+				   out.println(c.toString());
+				   break;
         	  case "3":
         	  case "4":
         	  case "5":
         	  case "6":
         	  case "7":
+				  /* break; */
         	  }
         	  // Send response back to client
         	  //line = "Hi " + line;
-        	  out.println(line);
+        	  //out.println(line);
           } 
           catch (IOException e) {
         	  System.out.println("Read failed");
